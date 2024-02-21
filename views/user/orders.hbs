@@ -1,0 +1,162 @@
+<section class="mt-4 font-monospace">
+    {{#if orders}}
+    <div class="container">
+        <table class="table mt-5 display" id="ordertable" border="3">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Pincode</th>
+                    <th scope="col">Mobile</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Payment</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Product details</th>
+                    <th scope="col">Payment status</th>
+                    <th scope="col">order status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td>{{this.deliveryDetails.date}}</td>
+                    <td>{{this.deliveryDetails.address}}</td>
+                    <td>{{this.deliveryDetails.pincode}}</td>
+                    <td>{{this.deliveryDetails.mobile}}</td>
+                    <td>{{this.totalPrice}}</td>
+                    <td>{{this.paymentMethod}}</td>
+                    <td>{{this.status}}</td>
+                    <td><a href="/view-order-products/{{this._id}}" class="btn btn-primary badge">View Products</a></td>
+                    {{#if this.paymentstatus}}
+                    <td>{{this.info}}</td>
+                    {{else}}
+                    <td><button onclick="checkin('{{this._id}}')" type="button" class="btn btn-sm btn-primary">Pay Now</button></td>
+                    {{/if}}
+                    {{#if this.ordercancel}}
+                    {{#if this.delivered}}
+                    <td>Delivered</td>
+                    {{else}}
+                    <td>Cancelled</td>
+                    {{/if}}
+                    {{else}}
+                    <td><button onclick="cancel('{{this._id}}')" class="btn btn-primary btn-sm">Cancel</button></td>
+                    {{/if}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <hr>
+    </div>
+    {{else}}
+    <div class="container">
+        <div class="text-center mt-5 p-3">
+            <h1>No order available</h1>
+        </div>
+    </div>
+    {{/if}}
+    <div class="row text-center">
+        <div>
+            <a class="btn btn-primary" href="/">Go To Home</a>
+        </div>
+    </div>
+</section>
+
+<script>
+    new DataTable('#ordertable')
+
+    function checkin(orderId){
+        $.ajax({
+            url:'/pendingpayment/'+orderId,
+            method:'post',
+           success:(response)=>{
+              razorpayPayment(response)
+           }
+            
+        })
+    }
+
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_cwXAIrBX4Eaj6B", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Sumith", //your business name
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+               // alert(response.razorpay_payment_id);
+               // alert(response.razorpay_order_id);
+               // alert(response.razorpay_signature)
+
+                verifyPayment(response,order)
+            },
+            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                "name": "Gaurav Kumar", //your customer's name
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+    function verifyPayment(payment,order){
+        $.ajax({
+            url:'/verifypayment',
+            data:{
+                payment,
+                order
+            },
+            method:'post',
+            success:(response)=>{
+                if(response.status==true){
+                    location.href='/success'
+                }else{
+                    alert('Payment Failed')
+                }
+            }
+        })
+    }
+
+function cancel(orderId){
+$.ajax({
+    url:'/cancelorder'+orderId,
+    method:'get',
+    success:(response)=>{
+       if(response.status){
+        location.reload()
+       }
+    }
+})
+}    
+</script>
+
+<style>
+      section{
+       transform-origin: top bottom;
+       animation: rotateK 0.8s ease-out forwards;
+}
+
+@keyframes rotateK {
+  0% {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  50% {
+    transform: rotateX(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+}
+a.badge{
+    font-size:15px;
+}
+</style>

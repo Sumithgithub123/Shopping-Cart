@@ -1,0 +1,150 @@
+<section class="font-monospace">
+    {{#if total}}
+    <div class="container mt-5">
+        <form action="" id="checkout-form">
+            <div class="row">
+
+                <div class="col-md-6 p-3">
+                    <h2>Enter Delivery Details</h2>
+                    <br>
+                    <div>
+                        <label for="">Address</label>
+                        <input required autofocus="on" type="text" name="Address" class="form-control">
+
+                        <label for="">Pincode</label>
+                        <input required type="text" name="Pincode" class="form-control">
+
+                        <label for="">Mobile</label>
+                        <input required type="tel" name="Mobile" class="form-control">
+                        <input type="text" name="userId" id="" value="{{user._id}}" hidden>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="container mt-5 ml-5 checkout">
+                        <h5>Total Amount : ₹ {{total}}</h5>
+                        <hr>
+                        <div class="payment">
+                            <p>Payment Method</p>
+
+                            <label class="radio-inline"><input type="radio" name="payment-method" value="COD" checked>
+                                COD
+                            </label>
+                            <label class="radio-inline mt-2"><input type="radio" name="payment-method" value="ONLINE">
+                                Online
+                            </label>
+                            <button type="submit" class="btn btn-success float-end">Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {{else}}
+    <div class="container">
+        <div class="text-center mt-5 p-3">
+            <h1>No Product in cart</h1>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div>
+            <a class="btn btn-primary" href="/">Go To Home</a>
+        </div>
+    </div>
+    {{/if}}
+</section>
+
+<script>
+    $("#checkout-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/place-order',
+            method: 'post',
+            data: $("#checkout-form").serialize(),
+            success: (response) => {
+                //alert(response)
+                if (response.codsuccess) {
+                    location.href = '/success'
+                }else if(response.cart){
+                    location.href = '/orders'
+                } else {
+                    razorpayPayment(response)
+                }
+            }
+        })
+    })
+
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_cwXAIrBX4Eaj6B", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Sumith", //your business name
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+               // alert(response.razorpay_payment_id);
+               // alert(response.razorpay_order_id);
+               // alert(response.razorpay_signature)
+
+                verifyPayment(response,order)
+            },
+            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                "name": "Gaurav Kumar", //your customer's name
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+    function verifyPayment(payment,order){
+        $.ajax({
+            url:'/verifypayment',
+            data:{
+                payment,
+                order
+            },
+            method:'post',
+            success:(response)=>{
+                if(response.status==true){
+                    location.href='/success'
+                }else{
+                    alert('Payment Failed')
+                }
+            }
+        })
+    }
+</script>
+
+<style>
+    input[type=radio] {
+        width: 20px;
+        height: 20px;
+    }
+
+    label.radio-inline {
+        display: flex;
+        align-items: center;
+    }
+
+    .checkout {
+        border: 1px solid;
+        border-radius: 3px;
+        padding: 30px;
+    }
+
+    .payment {
+        padding-bottom: 16px;
+    }
+
+    .row {
+        justify-content: space-between;
+    }
+</style>

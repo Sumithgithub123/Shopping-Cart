@@ -1,0 +1,65 @@
+<section class="container">
+<div class="row">
+    <div class="col-md-6 m-auto">
+        <div class="container-fluid mt-5">
+            <h2 class="text-center">Login</h2>
+            <form action="/login" method="post">
+                <div class="form-group">
+                   <label for="">Email</label>
+                   <input id="hi" required="true" placeholder="Email.." type="email" class="trans form-control" name="email">
+                </div>
+                <div class="form-group">
+                   <label for="">Password</label>
+                   <div class="trans d-flex flex-row">
+                   <input id="inppass" required="true" placeholder="Password..." type="password" class="form-control" name="password">
+                   <button type="button" id="chkbtn" class="badge bg-success ms-1 border border-none bg-black">Show</button>
+                   </div>
+                </div>
+                 <button type="submit" class="btn btn-primary float-end mt-2">Login</button>
+                {{#if logginErr}}
+                <span class="text-danger">Invalid Email Or Password!</span><br>
+                <a class="text-decoration-none" href="/signup">Create new account ?</a>
+               {{else}}
+                <a class="text-decoration-none" href="/signup">Create new account ?</a>
+                {{/if}}
+            </form>
+        </div>
+
+    </div>
+</div>
+</section>
+
+<script>
+    $('#chkbtn').click(function (){
+    if( $('#inppass').attr('type')=='password'){
+        $('#inppass').attr('type','text')
+        $('#chkbtn').html('Hide')
+    }else{
+        $('#inppass').attr('type','password')
+        $('#chkbtn').html('Show')
+    }
+    })
+</script>
+
+<style>
+    .form-control:focus{
+        border-color: rgb(78, 88, 134);
+        box-shadow: none;
+    }
+    .trans:hover{
+        transform: scaleX(1.03);
+    }
+    .trans{
+        transition: 2s;
+    }
+    .form-control{
+        border-radius: 10px;
+    }
+    .btn{
+        border-radius: 10px;
+    }
+    .bg-success{
+        border-radius: 10px;
+    }
+</style>
+

@@ -1,0 +1,127 @@
+<section class="mt-4 font-monospace">
+    {{#if totals}}
+    <div class="container">
+        <table class="table mt-5 display" id="carttable" border="3">
+            <thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td>
+                        <img width="70px" height="70px" src="product-images/{{this.product._id}}.png">
+                    </td>
+                    <td>{{this.product.name}}</td>
+                    <td>{{this.product.Price}}</td>
+                    <td class="fs-5">
+                        <button class="btn-primary badge cart-item-count mr-3"
+                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',-1)">-</button>
+                        <span id="{{this.product._id}}">{{this.quantity}}</span>
+                        <button class="btn-primary badge cart-item-count ml-3"
+                            onclick="changeQuantity('{{this._id}}','{{this.product._id}}','{{../user._id}}',1)">+</button>
+                    </td>
+                    <td>
+                        {{!-- <a href="" class="btn btn-danger">Remove</a> --}}
+                        <button class="btn btn-danger"
+                            onclick="deleteproduct('{{this._id}}','{{this.product._id}}')">Remove</button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <hr>
+        <div class='float-end pe-5'>
+            <h3 class="float-start">Total: Rs. <span id="total">{{totals}}</span></h3><br>
+            <a href="/place-order" class="btn btn-success"><b>Place Order</b></a>
+        </div>
+    </div>
+    {{else}}
+    <div class="container">
+        <div class="text-center mt-5 p-3">
+            <h1>Cart is empty</h1>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div>
+            <a class="btn btn-primary" href="/">Go To Home</a>
+        </div>
+    </div>
+    {{/if}}
+</section>
+
+<script>
+    function deleteproduct(cartid, productid) {
+        $.ajax({
+            url: '/delete-product',
+            data: {
+                car: cartid,
+                pro: productid
+            },
+            method: 'post',
+            success: (response) => {
+                alert("Product removed from cart")
+                location.reload()
+            }
+        })
+    }
+
+    function changeQuantity(cartId, proId, userId, count) {
+        let quantity = parseInt(document.getElementById(proId).innerHTML)
+        count = parseInt(count)
+        $.ajax({
+            url: '/change-product-quantity',
+            data: {
+                user: userId,
+                cart: cartId,
+                product: proId,
+                count: count,
+                quantity: quantity
+            },
+            method: 'post',
+            success: (response) => {
+                if (response.removeProduct) {
+                    alert("Product Removed from cart")
+                    location.reload() //used for reloading the specific page.
+                } else {
+                    document.getElementById(proId).innerHTML = quantity + count
+                    document.getElementById('total').innerHTML = response.total
+                }
+            }
+        })
+    }
+    new DataTable('#carttable')
+</script>
+
+<style>
+    section{
+       transform-origin: top bottom;
+       animation: rotateX 0.8s ease-out forwards;
+}
+
+@keyframes rotateX {
+  0% {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  50% {
+    transform: rotateX(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+}
+.btn-success{
+    margin-left: 4.3rem;
+    margin-top: 3px;
+}
+h3.float-start{
+    margin-right: 7rem;
+}
+</style>

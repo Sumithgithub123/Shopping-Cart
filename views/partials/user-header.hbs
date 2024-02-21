@@ -1,0 +1,92 @@
+<header class="container-fluid sticky-top font-monospace">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Shopping Cart</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Cart <span style="display: none;" class="badge badge-light bg-success rounded-pill" id="cart-count">{{cartCount}}</span></a>
+                    </li>
+                    {{#if user}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">Orders</a>
+                    </li>
+                    {{/if}}
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-secondary font-monospace dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        {{#if user}}
+                        {{user.Name}}
+                         {{else}}
+                         Login Here
+                        {{/if}}
+                    </button>
+                    <ul style="min-width: 80%;" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                         {{#if user}}
+                         {{#if profile}}
+                         <li><a class="dropdown-item" href="/logout">Logout <i class="bi bi-box-arrow-in-left"></i></a></li>
+                         {{else}}
+                         <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout <i class="bi bi-box-arrow-in-left"></i></a></li>
+                        {{/if}}
+                         {{else}}
+                         <li><a class="dropdown-item" href="/login">Login <i class="bi bi-box-arrow-in-right"></i></a></li>
+                        {{/if}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<script>
+    $(document).ready(function (){
+       let count =$('#cart-count').html()
+       if(count!=0){
+           document.getElementById('cart-count').style.display = 'unset'
+       }
+    })
+</script>
+
+<style>
+    nav{
+        border-radius: 10px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+    
+.dropdown-menu{
+       transform-origin: top center;
+       animation: rotateZ 500ms ease-out forwards;
+       border-radius: 7px;
+}
+
+@keyframes rotateZ {
+  0% {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  50% {
+    transform: rotateX(30deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(10deg);
+  }
+}
+ .btn:focus{
+box-shadow: unset;
+}
+.btn{
+    border-radius: 7px;
+}
+
+
+</style>

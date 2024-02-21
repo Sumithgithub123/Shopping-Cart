@@ -1,0 +1,75 @@
+<section class="mt-4 font-monospace">
+    {{#if allorders}}
+    <div class="container">
+        <table class="table mt-5 display" id="allordertable" border="3">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Pincode</th>
+                    <th scope="col">Mobile</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Method</th>
+                    <th scope="col">payment</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Product details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each allorders}}
+                <tr>
+                    <td>{{this.deliveryDetails.date}}</td>
+                    <td>{{this.userdetail.Name}}</td>
+                    <td>{{this.deliveryDetails.address}}</td>
+                    <td>{{this.deliveryDetails.pincode}}</td>
+                    <td>{{this.deliveryDetails.mobile}}</td>
+                    <td>{{this.total}}</td>
+                    <td>{{this.paymentMethod}}</td>
+                    <td>{{this.info}}</td>
+                    <td>{{this.status}}</td>
+                    <td><a href="/superadmin/view-order-products/{{this._id}}" class="btn btn-primary badge">View Products</a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <hr>
+    </div>
+    {{else}}
+    <div class="container">
+        <div class="text-center mt-5 p-3">
+            <h1>No order available</h1>
+        </div>
+    </div>
+    {{/if}}
+    <div class="row text-center">
+        <div>
+            <a class="btn btn-primary" href="/superadmin">Go To Home</a>
+        </div>
+    </div>
+</section>
+
+<script>
+    new DataTable('#allordertable')
+</script>
+
+<style>
+     section{
+       transform-origin: top bottom;
+       animation: rotateM 0.8s ease-out forwards;
+}
+
+@keyframes rotateM {
+  0% {
+    opacity: 0;
+    transform: rotateY(-90deg);
+  }
+  50% {
+    transform: rotateY(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+}
+</style>

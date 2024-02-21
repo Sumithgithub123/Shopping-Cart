@@ -1,0 +1,137 @@
+<section>
+    <div class="container">
+        <div class="hero">
+            <img height="130px" id="imag" width="130px" src="images/{{user._id}}.png" onerror="this.src='images/profile.png';" alt="">
+        </div>
+        <div>
+            <form action="/profile" method="post" enctype="multipart/form-data">
+                <label class="badge btn btn-primary badge-success" for="file-input" id="file-input-label">Upload</label>
+                <input required type="file" name="image" id="file-input" onchange='viewImage(event)'>
+                <input type="text" hidden name="userId" value="{{user._id}}" id="">
+                <button id="btn" type="submit" class="badge badge-success btn btn-primary">Set</button>
+            </form>
+        </div>
+        <div class="details flex-column">
+            <form action="/changeprofile" method="post" id="changeprofile">
+                <div><label id="inlab" for="in">Name:</label>
+                    <input disabled type="text" placeholder="{{user.Name}}" name="name" id="in">
+                </div>
+
+                <div><label id="inlab1" for="in">Email:</label>
+                    <input disabled type="email" placeholder="{{user.Email}}" name="email" id="in1">
+                </div>
+                <div>
+                    <button id="btn1" type="button" class="btn btn-primary badge" onclick="chsd()">Edit</button>
+                </div>
+                <div>
+                    <input type="text" name="userId" value="{{user._id}}" hidden>
+                    <button type="submit" id="btn2" class="btn btn-primary badge">Change</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+   
+
+    function chsd() {
+        document.getElementById('in').disabled = false
+        document.getElementById('in1').disabled = false
+    }
+
+    function viewImage(event) {
+        document.getElementById('imag').src = URL.createObjectURL(event.target.files[0])
+    }
+</script>
+
+<style>
+    .details {
+        margin-top: 0.5rem;
+    }
+   @keyframes rotateY {
+  0% {
+    opacity: 0;
+    transform:translateY(-50%)
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0%)
+  }
+}
+    .container {
+       transform-origin: top bottom;
+       animation: rotateY 0.6s ease-in-out forwards;
+        margin-top: 5rem;
+        height: 400px;
+        width: 400px;
+        background-color: rgb(238, 246, 246);
+        border-radius: 20px;
+        left: 3rem;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+
+    .hero {
+        text-align: center;
+    }
+
+    img {
+
+        border-radius: 30px;
+        margin-top: 1rem;
+    }
+
+    #file-input-label {
+        margin-top: 0.7rem;
+    }
+
+    #file-input {
+        margin-left: 5.5rem;
+        margin-top: 0.5rem;
+        position: absolute;
+        display: none;
+    }
+
+    label {
+        margin-left: 8.5rem;
+        margin-top: 0.5rem;
+        position: absolute;
+    }
+
+    #btn {
+        margin-left: 12.4rem;
+        margin-top: 0.7rem;
+        position: absolute;
+    }
+
+    #btn1 {
+        margin-left: 8rem;
+        margin-top: 1rem;
+        position: absolute;
+    }
+    #btn2{
+         margin-left: 11rem;
+        margin-top: 1rem;
+        position: absolute;
+    }
+
+    #in {
+        margin-top: 2.5rem;
+        margin-left: 7rem;
+    }
+
+    #inlab {
+        margin-top: 2.7rem;
+        margin-left: 3.8rem;
+    }
+
+    #inlab1 {
+        margin-top: 1.2rem;
+        margin-left: 3.8rem;
+    }
+
+    #in1 {
+        margin-top: 1rem;
+        margin-left: 7rem;
+    }
+</style>

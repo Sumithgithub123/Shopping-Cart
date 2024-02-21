@@ -1,0 +1,45 @@
+<section class="mt-4">
+    <div class="container">
+        <table id="allusertable" class="table display mt-5 " border="2">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each alluser}}
+                <tr>
+                    <td>{{this.Name}}</td>
+                    <td>{{this.Email}}</td>
+                    {{/each}}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script>
+ new DataTable('#allusertable');
+</script>
+
+<style>
+     section{
+       transform-origin: top bottom;
+       animation: rotateO 0.8s ease-out forwards;
+}
+
+@keyframes rotateO {
+  0% {
+    opacity: 0;
+    transform: rotateY(-90deg);
+  }
+  50% {
+    transform: rotateY(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+}
+</style>

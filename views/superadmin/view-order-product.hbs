@@ -1,0 +1,53 @@
+ 
+    <section class="container mt-5 font-monospace">
+        <div class="row">
+            {{#each products}}
+            <div class="col-md-3 p-3 text-center">
+                <div class="card" style="width: 18rem">
+                    <img src="/product-images/{{this.product._id}}.png" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.product.name}}</h5>
+                        <p>Rs.{{this.product.Price}}</p>
+                        <p class="card-text">Quantity: {{this.quantity}}</p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </section>
+
+    <style>
+        .card{
+            background-color: whitesmoke;
+            border-radius: 20px;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+         transform-origin: top bottom;
+       animation: rotateN 0.6s ease-in-out forwards;
+        }
+
+@keyframes rotateN {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.card-img-top:hover{
+  animation:hi 0.2s ease-in-out  forwards;
+}
+@keyframes hi {
+  0%{
+    transform: scale(1);
+  }
+  100%{
+    transform: scale(1.1);
+  }
+}
+    </style>
