@@ -8,6 +8,8 @@ function addToCart(proId){
             count=parseInt(count)+1
             $('#cart-count').html(count)
             document.getElementById('cart-count').style.display = 'unset'
+        }else if(response.notlogin){
+            location.href = '/login'
         }
         //  alert(response)
      }

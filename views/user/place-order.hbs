@@ -102,6 +102,10 @@
             }
         };
         var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed',(response)=>{
+        alert("Payment Failed")
+        location.href='/orders'
+        });
         rzp1.open();
     }
     function verifyPayment(payment,order){

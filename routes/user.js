@@ -87,9 +87,13 @@ router.get('/cart',verifyLogin,async(req,res)=>{
 
 router.get('/add-to-cart/:id',(req,res)=>{
   //console.log("api call");
+  if(req.session.userloggedIn){
   userHelper.addtoCart(req.params.id,req.session.user._id).then(()=>{
     res.json({status:true})
   })
+  }else{
+    res.json({notlogin:true})
+  }
 })
 
 router.post('/change-product-quantity',(req,res,next)=>{
